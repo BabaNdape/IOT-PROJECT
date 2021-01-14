@@ -1,3 +1,5 @@
+// This works with the csv file as in tutorial 
+
 const svg = d3.select("#chart-area")
     .append("svg")
     .attr("width", 600)
@@ -7,6 +9,9 @@ const g = svg.append("g")
     .attr("transform", `translate(100, 30)`)
 
 d3.csv("revenues.csv").then(data => {
+
+    console.log("here is the data", data);
+
     // Scaling the y axis
     const y = d3.scaleLinear()
        .domain([0, d3.max(data, d => d.revenue)])    // input
