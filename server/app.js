@@ -21,3 +21,6 @@ mongoose.connect(process.env.DB_URL, {
 
 
 app.listen(8080);
+
+
+//TODO: AFTER all other todos maybe ? : Coap posts at least (maybe not for get)
