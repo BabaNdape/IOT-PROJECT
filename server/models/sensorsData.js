@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+//TODO: Seperate in two different Schema : fitiotData and raspyData
+
 const SensorsDataSchema = mongoose.Schema({
     "timestamp": { type: Date, default: Date.now },
     "description2": String,//{ type: Date, default: Date.now },
