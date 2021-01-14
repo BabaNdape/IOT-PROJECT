@@ -2,16 +2,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
 require('dotenv/config')
-const testRoutes = require('./routes/test');
+const sensorsDataRoutes = require('./routes/sensorsData');
 const app = express()
-
 
 // ROUTES
 app.use(bodyParser.json())
-app.use('/routes', testRoutes)
-app.get('/', (req, res) => {
-    res.send('Hello world');
-});
+app.use('/api', sensorsDataRoutes)
 
 
 // CONNECT TO DB

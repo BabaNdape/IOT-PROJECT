@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const TestSchema = mongoose.Schema({
+const SensorsDataSchema = mongoose.Schema({
     "timestamp": { type: Date, default: Date.now },
     "description2": String,//{ type: Date, default: Date.now },
     "raspyData": {
@@ -16,8 +16,7 @@ const TestSchema = mongoose.Schema({
         "humidity": Number,
         "alarm": Boolean
     },
-    "description": String,//{ type: Date, default: Date.now },
-
+    "description": String,
 });
 
-module.exports = mongoose.model('Test', TestSchema)
+module.exports = mongoose.model('SensorsData', SensorsDataSchema)
