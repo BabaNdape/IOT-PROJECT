@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const SensorsData = require('../models/sensorsData');
+const SensorsData = require('../models/fitiotData');
 
 // GET SENSOR DATA
 
