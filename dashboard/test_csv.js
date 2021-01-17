@@ -1,6 +1,6 @@
 // This works with the csv file as in tutorial 
 
-const svg = d3.select("#chart-area")
+const svg = d3.select("#test-csv-chart-area")
     .append("svg")
     .attr("width", 600)
     .attr("height", 400)

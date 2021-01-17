@@ -1,6 +1,6 @@
 //TODO try to display room temperature (y axis) with timestamps (x axys)
 
-const svg = d3.select("#chart-area")
+const svg = d3.select("#raspy-chart-area")
     .append("svg")
     .attr("width", 600)
     .attr("height", 400)
@@ -8,9 +8,10 @@ const svg = d3.select("#chart-area")
 const g = svg.append("g")
     .attr("transform", `translate(100, 30)`)
 
-d3.json("http://localhost:8080/api/sensors-data").then(data => {
+d3.json("http://localhost:3000/sensors-data-raspy").then(data => {
 
-    console.log("here is the data", data);
+    console.log("Here is all the data", data);
+    console.log("Here is one entry", data[0])
 
     // Scaling the y axis
     const y = d3.scaleLinear()
