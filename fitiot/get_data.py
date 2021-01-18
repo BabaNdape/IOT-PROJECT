@@ -14,6 +14,7 @@ result = subprocess.check_output(coap_server, shell=True)
 ##to do temperature calculations with ideal gas formula
 
 pressure = int(coap_server[0] + coap_server[1] + coap_server[2])
+print(pressure)
 
 ####Création du JSON
 
