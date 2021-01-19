@@ -1,5 +1,6 @@
 const express = require('express')
 const mongoose = require('mongoose');
+const axios = require('axios');
 
 const fitiotDataModel = require('./models/fitiotData');
 const raspyDataModel = require('./models/raspyData');
@@ -11,7 +12,8 @@ const port = 3000
 const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
-
+// raspy and fit server
+const addressRaspy = "http://localhost:3005";
 
 // CONNECT DASHBOARD
 app.use(express.static('../dashboard'))
@@ -144,6 +146,16 @@ app.post('/sensors-data-raspy', jsonParser, async (req,res) => {
           res.json({ message: err });
       });
   });
+
+// Stop and start machine
+app.post('/stop-machine', async (req,res) => {
+  
+  axios.post(addressRaspy, data)
+    .then((res) => {
+      console.log('Body: ', res.data);
+    });
+  res.json({message: "ok"});
+});
   
 // Start server
 app.listen(port, () => {
