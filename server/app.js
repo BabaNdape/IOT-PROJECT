@@ -149,12 +149,27 @@ app.post('/sensors-data-raspy', jsonParser, async (req,res) => {
 
 // Stop and start machine
 app.post('/stop-machine', async (req,res) => {
-  
-  axios.post(addressRaspy, data)
+  let path = "http://localhost:3005/stop-machine";
+  data = {};
+  machinFinalState = undefined
+  await axios.post(path, data)
     .then((res) => {
-      console.log('Body: ', res.data);
+      console.log(res.data);
+      machinFinalState = res.data;
     });
-  res.json({message: "ok"});
+  res.send(machinFinalState);
+});
+
+app.post('/start-machine', async (req,res) => {
+  let path = "http://localhost:3005/start-machine";
+  data = {};
+  machinFinalState = undefined
+  await axios.post(path, data)
+    .then((res) => {
+      console.log(res.data);
+      machinFinalState = res.data;
+    });
+  res.send(machinFinalState);
 });
   
 // Start server
