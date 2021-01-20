@@ -96,38 +96,39 @@ app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
 // Send raspy data between two time stamp
 app.get('/sensors-data-raspy', jsonParser, async (req, res) => {
   
-  // Calculating defaults params for timestamps
-  const seconds_now = Date.now() / 1000;
-  let timestampStart = (req.body.timestampStart == undefined ? seconds_now-3600 : req.body.timestampStart);
-  let timestampEnd = (req.body.timestampEnd== undefined ? seconds_now : req.body.timestampEnd);
-  console.log("timestamp start", timestampStart);
-  console.log("timestamp end", timestampEnd);
   try {
-      const query = raspyDataModel.find();
-      query.where('timestamp').gte(timestampStart);
-      query.where('timestamp').lte(timestampEnd);
-      let raspyDataReturned = {};
-      raspyDataReturned = [];
+    // Calculating defaults params for timestamps
+    const seconds_now = Date.now() / 1000;
+    let timestampStart = (req.body.timestampStart == undefined ? seconds_now-3600 : req.body.timestampStart);
+    let timestampEnd = (req.body.timestampEnd== undefined ? seconds_now : req.body.timestampEnd);
+    console.log("timestamp start", timestampStart);
+    console.log("timestamp end", timestampEnd);
 
-      query.exec(async (err, raspDataResult) => {
-        if (err) { throw err; }
-        // On va parcourir le résultat et les ajouter dans le JSON retourné
-        var curRaspyData;
-        for (var i = 0, l = raspDataResult.length; i < l; i++) {
-          curRaspyData = {
-            timestamp: raspDataResult[i].timestamp,
-            temperatureIn: raspDataResult[i].temperatureIn,
-            temperatureOut: raspDataResult[i].temperatureOut,
-            pressureIn: raspDataResult[i].pressureIn,
-            pressureOut: raspDataResult[i].pressureOut,
-            humidityIn: raspDataResult[i].humidityIn,
-            humidityOut: raspDataResult[i].humidityOut,
-          };
-          
-          raspyDataReturned.push(curRaspyData);
-        }
-        res.json(raspyDataReturned);
-      });
+    const query = raspyDataModel.find();
+    // query.where('timestamp').gte(timestampStart);
+    // query.where('timestamp').lte(timestampEnd);
+    let raspyDataReturned = {};
+    raspyDataReturned = [];
+
+    query.exec(async (err, raspDataResult) => {
+      if (err) { throw err; }
+      // On va parcourir le résultat et les ajouter dans le JSON retourné
+      var curRaspyData;
+      for (var i = 0, l = raspDataResult.length; i < l; i++) {
+        curRaspyData = {
+          timestamp: raspDataResult[i].timestamp,
+          temperatureIn: raspDataResult[i].temperatureIn,
+          temperatureOut: raspDataResult[i].temperatureOut,
+          pressureIn: raspDataResult[i].pressureIn,
+          pressureOut: raspDataResult[i].pressureOut,
+          humidityIn: raspDataResult[i].humidityIn,
+          humidityOut: raspDataResult[i].humidityOut,
+        };
+        
+        raspyDataReturned.push(curRaspyData);
+      }
+      res.json(raspyDataReturned);
+    });
   } catch(err) {
       res.json({ message: err });
   }

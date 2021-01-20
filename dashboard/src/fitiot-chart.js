@@ -1,11 +1,12 @@
-//TODO try to display room temperature (y axis) with timestamps (x axys)
 
-const svg = d3.select("#fitiot-chart-area")
+
+
+const fitiot_svg = d3.select("#fitiot-chart-area")
     .append("svg")
     .attr("width", 600)
     .attr("height", 400)
 
-const g = svg.append("g")
+const g = fitiot_svg.append("g")
     .attr("transform", `translate(100, 30)`)
 
 d3.json("http://localhost:3000/sensors-data-fitiot").then(data => {

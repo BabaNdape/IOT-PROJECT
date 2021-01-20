@@ -3,29 +3,43 @@
 <head>
    <title>DEVATEC TEST DASHBOARD</title>
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+   <link href="/src/ui-choose.css" rel="stylesheet">
 
 </head>
 
 
 <body>
-   
    <div class="container">
+      <div class="row mt-3">
+         <p class="text-center">DASHBOARD DE TEST DEVATEC® - RIO203</p>
+      </div>   
       <!-- TIME SELECTION -->
-      <div class="row">
-         TIME SELECTION
-      </div>
+      <div class="row m-4">
+         <div class="text-center">
+            <select class="ui-choose" id="demo">
+               <option value="a">5</option>
+               <option value="b">15</option>
+               <option value="c">30</option>
+               <option value="d">60</option>
+               <option value="e">120</option>
+            </select>
+         </div>   
+
+      </div>   
 
       <!-- SECOND LINE -->
       <div class="row">
    
          <!-- RASPY IN -->
          <div class="col">
-            RASPY IN
+            <p class="text-center">RASPY IN</p>
+            <div id="raspy-in-chart-area"></div>
+
          </div>
          
          <!-- FITIOT -->
          <div class="col">
-            FITIOT
+            <p class="text-center">FITIOT</p>
             <div id="fitiot-chart-area"></div>
 
          </div>
@@ -36,12 +50,15 @@
          
          <!-- RASPY OUT -->
          <div class="col">
-            RASPY OUT
+            <p class="text-center mt-3">RASPY OUT</p>
+            <div id="raspy-out-chart-area"></div>
+
          </div>
 
          <!-- BUTTONS -->
          <div class="col">
-            BUTTONS
+            <p class="text-center mt-3">BUTTONS</p>
+
          </div>
       </div>
  
@@ -56,9 +73,27 @@
    <script src="https://d3js.org/d3.v6.min.js"></script>
 
    <!-- Custom JS -->
-   <script src="fitiot_chart.js"></script>
-   <!-- <script src="raspy_chart.js"></script> -->
+   <script src="src/fitiot-chart.js"></script>
+   <script src="src/raspy-in-chart.js"></script>
+   <script src="src/raspy-out-chart.js"></script>
    <!-- <script src="test_csv.js"></script> -->
 
+   <!-- Import JQuerry -->
+   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+   <script src="src/ui-choose.js"></script>
+
+
+   <script>
+      // TIME SELECTION SCRIPT
+      $('.ui-choose').ui_choose();   
+      var uc_02 = $('#uc_02').data('ui-choose');
+      uc_02.click = function(value, item) {
+          console.log('click', value);
+      };
+      uc_02.change = function(value, item) {
+          console.log('change', value);
+      };
+      </script>
+     
 </body>
 </html>

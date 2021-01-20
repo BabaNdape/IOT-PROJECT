@@ -1,11 +1,11 @@
 //TODO try to display temperatureIn (y axis) with timestamps (x axys)
 
-const svg = d3.select("#raspy-chart-area")
+const raspy_out_svg = d3.select("#raspy-out-chart-area")
     .append("svg")
     .attr("width", 600)
     .attr("height", 400)
 
-const g = svg.append("g")
+const raspy_out_g = raspy_out_svg.append("g")
     .attr("transform", `translate(100, 30)`)
 
 d3.json("http://localhost:3000/sensors-data-raspy").then(data => {
@@ -15,7 +15,7 @@ d3.json("http://localhost:3000/sensors-data-raspy").then(data => {
 
     // Scaling the y axis
     const y = d3.scaleLinear()
-       .domain([0, d3.max(data, d => d.temperatureIn)])    // input
+       .domain([0, d3.max(data, d => d.temperatureOut)])    // input
        .range([340, 0])  // output
 
     // Scaling x axis : timestamps
@@ -26,7 +26,7 @@ d3.json("http://localhost:3000/sensors-data-raspy").then(data => {
         .paddingOuter(0.2)// ouput
 
     const xAxisCall = d3.axisBottom(x)
-        g.append("g")
+    raspy_out_g.append("g")
             .attr("class", "x axis")
             .attr("transform", `translate(0, 340)`)
             .call(xAxisCall)
@@ -39,19 +39,19 @@ d3.json("http://localhost:3000/sensors-data-raspy").then(data => {
     const yAxisCall = d3.axisLeft(y)
         .ticks(3)
         .tickFormat(d => d)
-        g.append("g")
+        raspy_out_g.append("g")
           .attr("class", "y axis")
           .call(yAxisCall)
     
 
     // Draw rects
-    const rects = g.selectAll("rect")
+    const rects = raspy_out_g.selectAll("rect")
         .data(data)
     
     rects.enter().append("rect")
-        .attr("y", d => y(d.temperatureIn))
+        .attr("y", d => y(d.temperatureOut))
         .attr("x", d => x(d.timestamp))
         .attr("width", x.bandwidth)
-        .attr("height", d => 340 - y(d.temperatureIn))
+        .attr("height", d => 340 - y(d.temperatureOut))
         .attr("fill", "#6a976a")
 }).catch( err => console.error(err));
