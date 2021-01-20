@@ -34,6 +34,9 @@ mongoose.connect(process.env.DB_URL, {
 
 // CONNECTION WITH FIT-IOT
 // Send fit iot data between two time stamp
+
+// TODO: timestamp start en parametre de la route
+// TODO: Corriger le filtrage que Paul a cassé :(
 app.get('/sensors-data-fitiot', jsonParser, async (req, res) => {
   var seconds_now =  Date.now() / 1000;
   let timestampStart = (req.body.timestampStart == undefined ? seconds_now-3600 : req.body.timestampStart);
@@ -88,7 +91,9 @@ app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
   });
 
 
-// CONNECTION WITH FIT-IOT
+// TODO: timestamp start en parametre de la route
+// TODO: Corriger le filtrage que Paul a cassé :(
+// CONNECTION WITH RASPY
 // Send raspy data between two time stamp
 app.get('/sensors-data-raspy', jsonParser, async (req, res) => {
   
