@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 
 const fitiotDataSchema = mongoose.Schema({
-    "timestamp": { type: Date, default: new Date() },
+    "timestamp": Number,
     "temperature": Number,
     "humidity": Number,
     "alarm": Boolean

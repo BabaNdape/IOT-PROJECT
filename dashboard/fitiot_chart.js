@@ -12,6 +12,8 @@ d3.json("http://localhost:3000/sensors-data-fitiot").then(data => {
 
     console.log("Here is all the data", data);
     console.log("Here is one entry", data[0])
+    console.log("Here is a timestamp", data[0].timestamp)
+    console.log("Here are seconds", Date(data[0].timestamp).getTime() / 1000)
 
     // Scaling the y axis
     const y = d3.scaleLinear()

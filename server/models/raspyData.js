@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const raspyDataSchema = mongoose.Schema({
-    "timestamp": { type: Date, default: Date.now },
+    "timestamp": Number,
     "temperatureIn": Number,
     "temperatureOut": Number,
     "pressureIn": Number,

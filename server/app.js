@@ -35,12 +35,13 @@ mongoose.connect(process.env.DB_URL, {
 // CONNECTION WITH FIT-IOT
 // Send fit iot data between two time stamp
 app.get('/sensors-data-fitiot', jsonParser, async (req, res) => {
-  let timestampStart = (req.body.timestampStart == undefined ? "1900-01-01T23:15:11.258Z" : req.body.timestampStart);
-  let timestampEnd = (req.body.timestampEnd== undefined ? new Date() : req.body.timestampEnd);
+  var seconds_now =  Date.now() / 1000;
+  let timestampStart = (req.body.timestampStart == undefined ? seconds_now-3600 : req.body.timestampStart);
+  let timestampEnd = (req.body.timestampEnd== undefined ? seconds_now : req.body.timestampEnd);
   try {
       const query = fitiotDataModel.find();
-      query.where('timestamp').gte(timestampStart);
-      query.where('timestamp').lte(timestampEnd);
+      // query.where('timestamp').gte(timestampStart);
+      // query.where('timestamp').lte(timestampEnd);
       let fitiotDataReturned = {};
       fitiotDataReturned = [];
 
@@ -48,6 +49,8 @@ app.get('/sensors-data-fitiot', jsonParser, async (req, res) => {
         if (err) { throw err; }
         // On va parcourir le résultat et les ajouter dans le JSON retourné
         var curFitData;
+        console.log(fitData)
+
         for (var i = 0, l = fitData.length; i < l; i++) {
           curFitData = {
             timestamp:  fitData[i].timestamp,
@@ -55,7 +58,6 @@ app.get('/sensors-data-fitiot', jsonParser, async (req, res) => {
             humidity: fitData[i].humidity,
             alarm: fitData[i].alarm
           };
-          
           fitiotDataReturned.push(curFitData);
         }
         res.json(fitiotDataReturned);
@@ -74,10 +76,10 @@ app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
       "humidity": req.body.humidity,
       "alarm": req.body.alarm
   });
-  console.log("Voici les données qui ontété postées :", fitiotData)
   fitiotData.save()
       .then(data => {
           res.json(data);
+          console.log("Voici les données qui ont été postées :", fitiotData)
       })
       .catch(err => {
           console.log(err);
@@ -89,8 +91,11 @@ app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
 // CONNECTION WITH FIT-IOT
 // Send raspy data between two time stamp
 app.get('/sensors-data-raspy', jsonParser, async (req, res) => {
-  let timestampStart = (req.body.timestampStart == undefined ? "1900-01-01T23:15:11.258Z" : req.body.timestampStart);
-  let timestampEnd = (req.body.timestampEnd== undefined ? new Date() : req.body.timestampEnd);
+  
+  // Calculating defaults params for timestamps
+  const seconds_now = Date.now() / 1000;
+  let timestampStart = (req.body.timestampStart == undefined ? seconds_now-3600 : req.body.timestampStart);
+  let timestampEnd = (req.body.timestampEnd== undefined ? seconds_now : req.body.timestampEnd);
   console.log("timestamp start", timestampStart);
   console.log("timestamp end", timestampEnd);
   try {
