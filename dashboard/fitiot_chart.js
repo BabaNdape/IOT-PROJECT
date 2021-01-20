@@ -13,19 +13,18 @@ d3.json("http://localhost:3000/sensors-data-fitiot").then(data => {
     console.log("Here is all the data", data);
     console.log("Here is one entry", data[0])
     console.log("Here is a timestamp", data[0].timestamp)
-    console.log("Here are seconds", Date(data[0].timestamp).getTime() / 1000)
 
     // Scaling the y axis
     const y = d3.scaleLinear()
-       .domain([0, d3.max(data, d => data.temperature)])    // input
+       .domain([0, d3.max(data, d => d.temperature)])    // input
        .range([340, 0])  // output
 
     // Scaling x axis : timestamps
     const x = d3.scaleBand()
-        .domain(data.map(d => data.timestamp))    // input
+        .domain(data.map(d => d.timestamp)) // input
         .range([0, 480])
         .paddingInner(0.5)
-        .paddingOuter(0.2)// ouput
+        .paddingOuter(0.2) // ouput
 
     const xAxisCall = d3.axisBottom(x)
         g.append("g")

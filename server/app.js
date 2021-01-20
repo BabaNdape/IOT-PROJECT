@@ -52,7 +52,6 @@ app.get('/sensors-data-fitiot', jsonParser, async (req, res) => {
         if (err) { throw err; }
         // On va parcourir le résultat et les ajouter dans le JSON retourné
         var curFitData;
-        console.log(fitData)
 
         for (var i = 0, l = fitData.length; i < l; i++) {
           curFitData = {
