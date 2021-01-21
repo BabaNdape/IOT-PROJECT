@@ -1,57 +1,120 @@
-//TODO try to display temperatureIn (y axis) with timestamps (x axys)
+// set the dimensions and margins of the graph
+var margin = {top: 10, right: 100, bottom: 30, left: 30},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
-const raspy_out_svg = d3.select("#raspy-out-chart-area")
-    .append("svg")
-    .attr("width", 600)
-    .attr("height", 400)
+// append the svg object to the body of the page
+var raspy_out_svg = d3.select("#raspy_out_chart")
+  .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 
-const raspy_out_g = raspy_out_svg.append("g")
-    .attr("transform", `translate(100, 30)`)
+d3.json("http://localhost:3000/sensors-data-raspy/"+timeback).then(data => {
 
-d3.json("http://localhost:3000/sensors-data-raspy").then(data => {
+     // List of groups (here I have one group per column)
+     var allGroup = ["temperatureOut", "pressureOut", "humidityOut"]
+     // Reformat the data: we need an array of arrays of {x, y} tuples
+     var dataReady = allGroup.map(function(grpName) { // .map allows to do something for each element of the list
+        return {
+         name: grpName,
+         values: data.map(function(d) {
+           return {timestamp: d.timestamp, value: d[grpName]};
+         })
+       };
+     });
+ 
+    // I strongly advise to have a look to dataReady with
+    // console.log(dataReady)
 
-    console.log("Here is all the data", data);
-    console.log("Here is one entry", data[0])
+    // A color scale: one color for each group
+    var myColor = d3.scaleOrdinal()
+      .domain(allGroup)
+      .range(d3.schemeSet2);
 
-    // Scaling the y axis
-    const y = d3.scaleLinear()
-       .domain([0, d3.max(data, d => d.temperatureOut)])    // input
-       .range([340, 0])  // output
+    // Add X axis --> it is a date format
+    var x = d3.scaleLinear()
+        //TODO: à terme ce sera la bonne échelle
+    //   .domain([0, timeback/60]) 
+      .domain([3110,3115]) 
+      .range([ 0, width ]);
+    raspy_out_svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
 
-    // Scaling x axis : timestamps
-    const x = d3.scaleBand()
-        .domain(data.map(d => d.timestamp))    // input
-        .range([0, 480])
-        .paddingInner(0.5)
-        .paddingOuter(0.2)// ouput
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain( [10,40]) //TODO: adapt automatically
+      .range([ height, 0 ]);
+    raspy_out_svg.append("g")
+      .call(d3.axisLeft(y));
 
-    const xAxisCall = d3.axisBottom(x)
-    raspy_out_g.append("g")
-            .attr("class", "x axis")
-            .attr("transform", `translate(0, 340)`)
-            .call(xAxisCall)
-            .selectAll("text")
-            .attr("y", "10")
-            .attr("x", "-5")
-            .attr("text-anchor", "end")
-            .attr("transform", "rotate(-40)")
-    
-    const yAxisCall = d3.axisLeft(y)
-        .ticks(3)
-        .tickFormat(d => d)
-        raspy_out_g.append("g")
-          .attr("class", "y axis")
-          .call(yAxisCall)
-    
+    // Add the lines
+    var line = d3.line()
+      .x(function(d) { return x(+d.timestamp) })
+      .y(function(d) { return y(+d.value) })
+    raspy_out_svg.selectAll("myLines")
+      .data(dataReady)
+      .enter()
+      .append("path")
+        .attr("class", function(d){ return d.name })
+        .attr("d", function(d){ return line(d.values) } )
+        .attr("stroke", function(d){ return myColor(d.name) })
+        .style("stroke-width", 4)
+        .style("fill", "none")
 
-    // Draw rects
-    const rects = raspy_out_g.selectAll("rect")
-        .data(data)
-    
-    rects.enter().append("rect")
-        .attr("y", d => y(d.temperatureOut))
-        .attr("x", d => x(d.timestamp))
-        .attr("width", x.bandwidth)
-        .attr("height", d => 340 - y(d.temperatureOut))
-        .attr("fill", "#6a976a")
+    // Add the points
+    raspy_out_svg
+      // First we need to enter in a group
+      .selectAll("myDots")
+      .data(dataReady)
+      .enter()
+        .append('g')
+        .style("fill", function(d){ return myColor(d.name) })
+        .attr("class", function(d){ return d.name })
+      // Second we need to enter in the 'values' part of this group
+      .selectAll("myPoints")
+      .data(function(d){ return d.values })
+      .enter()
+      .append("circle")
+        .attr("cx", function(d) { return x(d.timestamp) } )
+        .attr("cy", function(d) { return y(d.value) } )
+        .attr("r", 5)
+        .attr("stroke", "white")
+
+    // Add a label at the end of each line
+    raspy_out_svg
+      .selectAll("myLabels")
+      .data(dataReady)
+      .enter()
+        .append('g')
+        .append("text")
+          .attr("class", function(d){ return d.name })
+          .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
+          .attr("transform", function(d) { return "translate(" + x(d.value.timestamp) + "," + y(d.value.value) + ")"; }) // Put the text at the position of the last point
+          .attr("x", 12) // shift the text a bit more right
+          .text(function(d) { return d.name; })
+          .style("fill", function(d){ return myColor(d.name) })
+          .style("font-size", 15)
+
+    // Add a legend (interactive)
+    raspy_out_svg
+      .selectAll("myLegend")
+      .data(dataReady)
+      .enter()
+        .append('g')
+        .append("text")
+          .attr('x', function(d,i){ return 30 + i*120})
+          .attr('y', 30)
+          .text(function(d) { return d.name; })
+          .style("fill", function(d){ return myColor(d.name) })
+          .style("font-size", 15)
+          .on("click", (event,d) => {
+          // is the element currently visible ?
+          currentOpacity = d3.selectAll("." + d.name).style("opacity")
+          // Change the opacity: from 0 to 1 or from 1 to 0
+          d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
+        })
 }).catch( err => console.error(err));

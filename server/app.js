@@ -35,12 +35,11 @@ mongoose.connect(process.env.DB_URL, {
 // CONNECTION WITH FIT-IOT
 // Send fit iot data between two time stamp
 
-// TODO: timestamp start en parametre de la route
 // TODO: Corriger le filtrage que Paul a cassé :(
-app.get('/sensors-data-fitiot', jsonParser, async (req, res) => {
+app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
   var seconds_now =  Date.now() / 1000;
-  let timestampStart = (req.body.timestampStart == undefined ? seconds_now-3600 : req.body.timestampStart);
-  let timestampEnd = (req.body.timestampEnd== undefined ? seconds_now : req.body.timestampEnd);
+  let timestampStart = (req.params.timestampStart == undefined ? seconds_now-3600 : seconds_now-req.params.timeback);
+  // let timestampEnd = (req.body.timestampEnd == undefined ? seconds_now : req.body.timestampEnd);
   try {
       const query = fitiotDataModel.find();
       // query.where('timestamp').gte(timestampStart);
@@ -90,19 +89,18 @@ app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
   });
 
 
-// TODO: timestamp start en parametre de la route
 // TODO: Corriger le filtrage que Paul a cassé :(
 // CONNECTION WITH RASPY
 // Send raspy data between two time stamp
-app.get('/sensors-data-raspy', jsonParser, async (req, res) => {
+app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
   
   try {
     // Calculating defaults params for timestamps
-    const seconds_now = Date.now() / 1000;
-    let timestampStart = (req.body.timestampStart == undefined ? seconds_now-3600 : req.body.timestampStart);
-    let timestampEnd = (req.body.timestampEnd== undefined ? seconds_now : req.body.timestampEnd);
-    console.log("timestamp start", timestampStart);
-    console.log("timestamp end", timestampEnd);
+    const seconds_now = Math.round(Date.now() / 1000);
+    let timestampStart = (req.params.timestampStart == undefined ? seconds_now-3600 : seconds_now-req.params.timeback);
+    // let timestampEnd = (req.body.timestampEnd== undefined ? seconds_now : req.body.timestampEnd);
+    // console.log("timestamp start", timestampStart);
+    // console.log("timestamp end", timestampEnd);
 
     const query = raspyDataModel.find();
     // query.where('timestamp').gte(timestampStart);
