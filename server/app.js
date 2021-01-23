@@ -2,6 +2,8 @@ const express = require('express')
 const mongoose = require('mongoose');
 const axios = require('axios');
 
+const coap    = require('coap')
+
 const fitiotDataModel = require('./models/fitiotData');
 const raspyDataModel = require('./models/raspyData');
 require('dotenv/config')
@@ -14,6 +16,7 @@ var jsonParser = bodyParser.json()
 
 // raspy and fit server
 const addressRaspy = "http://localhost:3005";
+const addressFitiot = "coap://[::1]";
 
 // CONNECT DASHBOARD
 app.use(express.static('../dashboard'))
@@ -169,14 +172,18 @@ app.post('/stop-machine', async (req,res) => {
 });
 
 app.post('/start-machine', async (req,res) => {
-  let path = "http://localhost:3005/start-machine";
   data = {};
-  machinFinalState = undefined
-  await axios.post(path, data)
+  machinFinalState = undefined;
+  /*await axios.post(path, data)
     .then((res) => {
       console.log(res.data);
       machinFinalState = res.data;
-    });
+    });*/
+  console.log('on start')
+  let coapReq = coap.request(addressFitiot + '/start-machine');
+  await coapReq.on('response', function(res) {
+    console.log(res);
+  })
   res.send(machinFinalState);
 });
   
@@ -185,3 +192,38 @@ app.listen(port, () => {
   console.log(`RIO203 project listening at http://localhost:${port}`)
 })
 
+
+
+
+const fitiotServer  = coap.createServer({ type: 'udp6' })
+
+fitiotServer.on('request', function(req, res) {
+  if (req.url == '/start-machine') {
+    console.log('allo');
+    res.end('Hello ' + req.url.split('/')[1] + '\n')
+  }
+  
+  const payload = JSON.parse(req.payload)
+
+  const fitiotData = new fitiotDataModel({
+    "timestamp": payload.imestamp,
+    "temperature": payload.temperature,
+    "humidity": payload.humidity,
+    "alarm": payload.alarm
+  });
+
+
+  fitiotData.save()
+      .then(data => {
+          res.end(JSON.stringify(payload))
+          console.log("Voici les données qui ont été postées :", payload)
+      })
+      .catch(err => {
+          console.log(err);
+          res.end({ message: err });
+      });  
+})
+
+fitiotServer.listen(function() {
+  console.log('fitiotServer started')
+})
