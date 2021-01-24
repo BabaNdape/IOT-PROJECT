@@ -1,8 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose');
 const axios = require('axios');
-
-const coap    = require('coap')
+const coap = require('coap')
 
 const fitiotDataModel = require('./models/fitiotData');
 const raspyDataModel = require('./models/raspyData');
@@ -188,13 +187,12 @@ app.post('/start-machine', async (req,res) => {
   })*/
 });
   
-// Start server
+// HTTP SERVER
 app.listen(port, () => {
-  console.log(`RIO203 project listening at http://localhost:${port}`)
+  console.log(`HTTP server for dashboard and Raspy at http://localhost:${port}`)
 })
 
-
-
+// COAP 
 
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
@@ -226,5 +224,5 @@ fitiotServer.on('request', function(req, res) {
 })
 
 fitiotServer.listen(function() {
-  console.log('fitiotServer started')
+  console.log('COAP server for fitiot at coap://localhost:5863')
 })

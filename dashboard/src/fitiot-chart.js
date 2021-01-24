@@ -111,9 +111,9 @@ d3.json("http://localhost:3000/sensors-data-fitiot/"+timeback).then(data => {
           .style("fill", function(d){ return myColor(d.name) })
           .style("font-size", 15)
           .on("click", (event,d) => {
-          // is the element currently visible ?
-          currentOpacity = d3.selectAll("." + d.name).style("opacity")
-          // Change the opacity: from 0 to 1 or from 1 to 0
+            // is the element currently visible ?
+            currentOpacity = d3.selectAll("." + d.name).style("opacity")
+            // Change the opacity: from 0 to 1 or from 1 to 0
           d3.selectAll("." + d.name).transition().style("opacity", currentOpacity == 1 ? 0:1)
         })
 
