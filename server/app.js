@@ -160,8 +160,8 @@ app.post('/sensors-data-raspy', jsonParser, async (req,res) => {
 
 // Stop and start machine
 app.post('/stop-machine', async (req,res) => {
-  let path = "http://localhost:3005/stop-machine";
-  data = {};
+  let path = "http://localhost:3005/stop-machine"; // TO DO : change path for raspy address
+  data = {}; 
   machinFinalState = undefined
   await axios.post(path, data)
     .then((res) => {
@@ -172,19 +172,20 @@ app.post('/stop-machine', async (req,res) => {
 });
 
 app.post('/start-machine', async (req,res) => {
+  let path = "http://localhost:3005/start-machine"; // TO DO : change path for raspy address
   data = {};
-  machinFinalState = undefined;
-  /*await axios.post(path, data)
+  machinFinalState = undefined
+  await axios.post(path, data)
     .then((res) => {
       console.log(res.data);
       machinFinalState = res.data;
-    });*/
-  console.log('on start')
+    });
+  res.send(machinFinalState);
+  /*console.log('on start')
   let coapReq = coap.request(addressFitiot + '/start-machine');
   await coapReq.on('response', function(res) {
     console.log(res);
-  })
-  res.send(machinFinalState);
+  })*/
 });
   
 // Start server
