@@ -6,7 +6,7 @@ import threading
 #command to create an experiment named rio_project of duration 5mins
 experiment = "iotlab-experiment submit -n rio_project -d 5 -l 2,archi=m3:at86rf231+site=grenoble" 
 result = subprocess.check_output(experiment, shell=True) 
-print(result)
+#print(result)
 id = json.loads(result)
 exp_id = id['id'] #id of experiment...useful when multiple experiments are running
 
@@ -17,8 +17,8 @@ get_nodes = "iotlab-experiment get -i " +str(exp_id) + " -n"
 nodes = subprocess.check_output(get_nodes, shell=True)
 print(nodes)
 items = json.loads(nodes)
-br_ip     =str(items['items'][0]['uid'])
-server_ip =str(items['items'][1]['uid'])
+br_ip     =str(items['items'][0]['uid']) #ip adr suffix of border router
+server_ip =str(items['items'][1]['uid']) #ip adr suffix of server node
 
 #command to get active nodes
 get_id = "iotlab-experiment get -i " +str(exp_id) + " -ni"
@@ -27,6 +27,7 @@ print(nodes_id)
 n_id = json.loads(nodes_id)
 ids = n_id['items'][0]['grenoble']['m3']
 
+#get 2 digit or 3 digit node
 if len(ids) in range(5,8):
         if len(ids) == 5:
                 br_port =str(str(ids[0]) + str(ids[1]))
@@ -40,9 +41,10 @@ if len(ids) in range(5,8):
 else:
         print( "Erreur de ID" )
 
-print(server_port)
-print(br_ip)
-print(server_ip)
+#print(br_port)
+#print(server_port)
+#print(br_ip)
+#print(server_ip)
 
 time.sleep(5) #allow experiment time to launch
 
@@ -69,7 +71,7 @@ deploy_server_command = "iotlab-node --flash ~/iot-lab/parts/contiki/examples/io
 deploy_server = subprocess.check_output(deploy_server_command, shell=True)
 print(deploy_server)
 
-
+#command to get data
 command = "aiocoap-client "
 coap_server_prefix = "coap://[2001:660:5307:3140::"
 port = "5683/"
@@ -83,4 +85,4 @@ alive = False #kills daemon
 
 
 pressure = int(result[0] + result[1] + result[2])
-print("pressure = " + str(pressure))
+print("pressure = " + str(pressure)) #stored in a variable...to be sent to database
