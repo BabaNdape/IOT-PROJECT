@@ -197,12 +197,8 @@ app.listen(port, () => {
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
 fitiotServer.on('request', function(req, res) {
-  if (req.url == '/start-machine') {
-    console.log('allo');
-    res.end('Hello ' + req.url.split('/')[1] + '\n')
-  }
-  
-  const payload = JSON.parse(req.payload)
+  const payload = eval('(' + req.payload.toString() + ')')
+  console.log(payload)
 
   const fitiotData = new fitiotDataModel({
     "timestamp": payload.imestamp,
@@ -220,7 +216,7 @@ fitiotServer.on('request', function(req, res) {
       .catch(err => {
           console.log(err);
           res.end({ message: err });
-      });  
+      });
 })
 
 fitiotServer.listen(function() {
