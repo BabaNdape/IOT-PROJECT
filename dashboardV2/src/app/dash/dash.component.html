@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="row mt-3">
+     <p class="text-center">DASHBOARD DE TEST DEVATEC® - RIO203</p>
+  </div>   
+  <!-- TIME SELECTION -->
+  <div class="row m-4">
+     <div class="text-center">
+        <input type="button" class="form-control" value=5 (click)="askData(5)">
+        <input type="button" class="form-control" value=15 (click)="askData(15)">
+        <input type="button" class="form-control" value=30 (click)="askData(30)"> 
+        <input type="button" class="form-control" value=60 (click)="askData(60)">
+        <input type="button" class="form-control" value=120 (click)="askData(120)">
+     </div>   
+
+  </div>
+</div>
+
+
+<div class="grid-container">
+  <h1 class="mat-h1">DASHBOARD DE TEST DEVATEC® - RIO203</h1>
+  <mat-grid-list cols="2" rowHeight="350px">
+    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>
+            {{card.title}}
+            <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
+              <mat-icon>more_vert</mat-icon>
+            </button>
+            <mat-menu #menu="matMenu" xPosition="before">
+              <button mat-menu-item>Expand</button>
+              <button mat-menu-item>Remove</button>
+            </mat-menu>
+          </mat-card-title>
+        </mat-card-header>
+        <mat-card-content class="dashboard-card-content">
+          <div>Card Content Here</div>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+</div>
