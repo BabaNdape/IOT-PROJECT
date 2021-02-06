@@ -146,7 +146,7 @@ app.post('/sensors-data-raspy', jsonParser, async (req,res) => {
       "humidityIn": req.body.humidityIn,
       "humidityOut": req.body.humidityOut,
   });
-  console.log("Voici les données qui ontété postées :", raspyData)
+  console.log("Voici les données qui ont été postées :", raspyData)
   raspyData.save()
       .then(data => {
           res.json(data);
