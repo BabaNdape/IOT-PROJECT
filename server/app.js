@@ -188,12 +188,11 @@ app.post('/start-machine', async (req,res) => {
 });
   
 // HTTP SERVER
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`HTTP server for dashboard and Raspy at http://localhost:${port}`)
 })
 
 // COAP 
-
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
 fitiotServer.on('request', function(req, res) {
