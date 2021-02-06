@@ -26,7 +26,7 @@
                <option value=300>5</option>
                <option value=900>15</option>
                <option value=1800>30</option>
-               <option value=3600 selected>60</option>
+               <option value=3600>60</option>
                <option value=7200>120</option>
             </select>
          </div>   
@@ -132,18 +132,19 @@
       select_time_button.click = function(value, item) {
           console.log('click', value);
           if (value == timeback) {
-            // refresh
+            window.location.reload();
           }
       };
       select_time_button.change = function(value, item) {
           console.log('change', value);
           timeback = value
-          //  refresh
+          window.location.reload();
       };
    </script>
 
    <!-- Custom JS -->
-   <script src="src/fitiot-chart.js"></script>
+   <script src="src/fitiot-chart.js" id="trucmuche">
+   </script>
    <script src="src/raspy-in-chart.js"></script>
    <script src="src/raspy-out-chart.js"></script>
 

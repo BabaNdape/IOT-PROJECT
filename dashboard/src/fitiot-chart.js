@@ -12,6 +12,11 @@ var fitiot_svg = d3.select("#fitiot_chart")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
 
+function changeTimeback(newTimeBack) {
+  this.timeback = newTimeBack;
+  console.log(timeback);
+}
+
 d3.json("http://localhost:3000/sensors-data-fitiot/"+timeback).then(data => {
      // List of groups (here I have one group per column)
      var allGroup = ["temperature", "humidity"]
@@ -27,7 +32,8 @@ d3.json("http://localhost:3000/sensors-data-fitiot/"+timeback).then(data => {
 
     // I strongly advise to have a look to dataReady with
     // console.log(dataReady)
-
+    console.log(timeback);
+    console.log(data);
     // A color scale: one color for each group
     var myColor = d3.scaleOrdinal()
       .domain(allGroup)
@@ -36,8 +42,8 @@ d3.json("http://localhost:3000/sensors-data-fitiot/"+timeback).then(data => {
     // Add X axis --> it is a date format
     var x = d3.scaleLinear()
     //TODO: à terme ce sera la bonne échelle
-    //   .domain([0, timeback/60]) 
-      .domain([3110,3115]) 
+       .domain([0, timeback/60]) 
+    //  .domain([3110,3115]) 
       .range([ 0, width ]);
     fitiot_svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -52,7 +58,7 @@ d3.json("http://localhost:3000/sensors-data-fitiot/"+timeback).then(data => {
 
     // Add the lines
     var line = d3.line()
-      .x(function(d) { return x(+d.timestamp) })
+      .x(function(d) { return x(+d.timestamp - Date.now()) })
       .y(function(d) { return y(+d.value) })
     fitiot_svg.selectAll("myLines")
       .data(dataReady)
@@ -78,7 +84,7 @@ d3.json("http://localhost:3000/sensors-data-fitiot/"+timeback).then(data => {
       .data(function(d){ return d.values })
       .enter()
       .append("circle")
-        .attr("cx", function(d) { return x(d.timestamp) } )
+        .attr("cx", function(d) { return x(d.timestamp - Date.now()) } )
         .attr("cy", function(d) { return y(d.value) } )
         .attr("r", 5)
         .attr("stroke", "white")
@@ -92,7 +98,7 @@ d3.json("http://localhost:3000/sensors-data-fitiot/"+timeback).then(data => {
         .append("text")
           .attr("class", function(d){ return d.name })
           .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
-          .attr("transform", function(d) { return "translate(" + x(d.value.timestamp) + "," + y(d.value.value) + ")"; }) // Put the text at the position of the last point
+          .attr("transform", function(d) { return "translate(" + x(d.value.timestamp - Date.now()) + "," + y(d.value.value) + ")"; }) // Put the text at the position of the last point
           .attr("x", 12) // shift the text a bit more right
           .text(function(d) { return d.name; })
           .style("fill", function(d){ return myColor(d.name) })
