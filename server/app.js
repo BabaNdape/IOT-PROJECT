@@ -159,8 +159,8 @@ app.post('/sensors-data-raspy', jsonParser, async (req,res) => {
 
 // Stop and start machine
 app.post('/stop-machine', async (req,res) => {
-  let path = "http://localhost:3005/stop-machine";
-  data = {};
+  let path = "http://localhost:3005/stop-machine"; // TO DO : change path for raspy address
+  data = {}; 
   machinFinalState = undefined
   await axios.post(path, data)
     .then((res) => {
@@ -171,19 +171,20 @@ app.post('/stop-machine', async (req,res) => {
 });
 
 app.post('/start-machine', async (req,res) => {
+  let path = "http://localhost:3005/start-machine"; // TO DO : change path for raspy address
   data = {};
-  machinFinalState = undefined;
-  /*await axios.post(path, data)
+  machinFinalState = undefined
+  await axios.post(path, data)
     .then((res) => {
       console.log(res.data);
       machinFinalState = res.data;
-    });*/
-  console.log('on start')
+    });
+  res.send(machinFinalState);
+  /*console.log('on start')
   let coapReq = coap.request(addressFitiot + '/start-machine');
   await coapReq.on('response', function(res) {
     console.log(res);
-  })
-  res.send(machinFinalState);
+  })*/
 });
   
 // HTTP SERVER
@@ -196,12 +197,8 @@ app.listen(port, () => {
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
 fitiotServer.on('request', function(req, res) {
-  if (req.url == '/start-machine') {
-    console.log('allo');
-    res.end('Hello ' + req.url.split('/')[1] + '\n')
-  }
-  
-  const payload = JSON.parse(req.payload)
+  const payload = eval('(' + req.payload.toString() + ')')
+  console.log(payload)
 
   const fitiotData = new fitiotDataModel({
     "timestamp": payload.imestamp,
@@ -219,7 +216,7 @@ fitiotServer.on('request', function(req, res) {
       .catch(err => {
           console.log(err);
           res.end({ message: err });
-      });  
+      });
 })
 
 fitiotServer.listen(function() {

@@ -5,6 +5,8 @@ import json
 import time
 import threading
 
+from aiocoap import *
+
 #command to create an experiment named rio_project of duration 5mins
 experiment = "iotlab-experiment submit -n rio_project -d 5 -l 2,archi=m3:at86rf231+site=grenoble" 
 result = subprocess.check_output(experiment, shell=True) 
@@ -88,3 +90,23 @@ alive = False #kills daemon
 
 pressure = int(result[0] + result[1] + result[2])
 print("pressure = " + str(pressure)) #stored in a variable...to be sent to database
+
+
+
+#command to post data
+command = "aiocoap-client "
+coap_http_server_prefix = "coap://[::1]:" #TO-DO modifier pour l'ip du serveur 
+port = "5683/"
+path = "sensors-data-fitiot"
+
+#To-do mettre les bonnes valeurs dans le payload
+payload = "{'timestamp':3,'temperature':2,'humidity':1,'alarm':false}"
+
+#payload = json.dumps({"timestamp":3,"temperature":2,"humidity":1,"alarm":"False"})
+
+
+coap_http_server = command + coap_http_server_prefix+ port + path + " --payload " + payload
+
+result = subprocess.check_output(coap_http_server, shell=True)
+alive = False #kills daemon
+print(result)
