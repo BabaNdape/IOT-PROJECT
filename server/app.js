@@ -39,10 +39,8 @@ mongoose.connect(process.env.DB_URL, {
 
 // TODO: Corriger le filtrage que Paul a cassé :( Vilain Paul :(
 app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
-  console.log(req.params.timeback);
   try {
       // Calculating defaults params for timestamps
-      console.log(req.params.timeback * 60)
       let timestampEnd = Date.now() / 1000;
       let timestampStart = (timestampEnd - req.params.timeback * 60);
       console.log("timestamp start", timestampStart);
@@ -66,10 +64,8 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
             humidity: fitData[i].humidity,
             alarm: fitData[i].alarm
           };
-          console.log(fitData[i])
           fitiotDataReturned.push(curFitData);
         }
-        console.log(fitiotDataReturned);
         res.json(fitiotDataReturned);
       });
   } catch(err) {
@@ -102,7 +98,6 @@ app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
 // CONNECTION WITH RASPY
 // Send raspy data between two time stamp
 app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
-  console.log(req.params.timeback);
   try {
     // Calculating defaults params for timestamps
     let timestampEnd = Date.now();
@@ -206,7 +201,7 @@ fitiotServer.on('request', function(req, res) {
   console.log(payload)
 
   const fitiotData = new fitiotDataModel({
-    "timestamp": payload.imestamp,
+    "timestamp": payload.timestamp,
     "temperature": payload.temperature,
     "humidity": payload.humidity,
     "alarm": payload.alarm
