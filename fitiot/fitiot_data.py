@@ -7,7 +7,7 @@ import threading
 
 from datetime import datetime
 
-from aiocoap import *
+#from aiocoap import *
 
 #command to create an experiment named rio_project of duration 5mins
 experiment = "iotlab-experiment submit -n rio_project -d 5 -l 2,archi=m3:at86rf231+site=grenoble"
@@ -104,7 +104,7 @@ path = "sensors-data-fitiot"
 #To-do mettre les bonnes valeurs dans le payload
 
 now = datetime.now()
-timestamp = datetime.timestamp(now)
+timestamp = time.time()
 
 temperature = pressure/2
 
@@ -112,9 +112,8 @@ payload = "{'timestamp':timestamp,'temperature':temperature,'humidity':pressure,
 
 #payload = json.dumps({"timestamp":3,"temperature":2,"humidity":1,"alarm":"False"})
 
+print(payload)
 
 coap_http_server = command + coap_http_server_prefix+ port + path + " --payload " + payload
 
 result = subprocess.check_output(coap_http_server, shell=True)
-alive = False #kills daemon
-print(result)
