@@ -45,6 +45,8 @@ export class DashComponent {
     this.responseRaspy = responses[1];
     console.log(this.responseFitiot[0].timestamp);
     console.log('on dash component');
-    this.eventEmitterService.onUpdateData(this.responseFitiot);
+    this.eventEmitterService.onUpdateFitiotData(this.responseFitiot);
+    this.eventEmitterService.onUpdateRaspyInData(this.responseRaspy);
+    this.eventEmitterService.onUpdateRaspyOutData(this.responseRaspy);
   }
 }

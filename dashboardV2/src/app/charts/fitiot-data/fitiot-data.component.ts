@@ -13,11 +13,10 @@ export class FitiotDataComponent implements OnInit {
     responsive: true
   };
   chartData = [
-    { data: [330, 600, 260, 700], label: 'Temperature' },
-    { data: [120, 455, 100, 340], label: 'Humidity' }
+    { data: [0], label: 'Temperature' },
+    { data: [0], label: 'Humidity' }
   ];
-  chartLabels = ['January', 'February', 'Mars', 'April'];
-
+  chartLabels = ['0'];
   constructor(private eventEmitterService: EventEmitterService  ) { }
 
   ngOnInit() { 
@@ -31,5 +30,22 @@ export class FitiotDataComponent implements OnInit {
   updateData(fitiotData: any[]){
     console.log('on graph');
     console.log(fitiotData)
+
+    let temperatureArray: number[] = [];
+    let humidityArray: number[] = [];
+    let timestampArray: string[] = [];
+
+    fitiotData.forEach(element => {
+      temperatureArray.push(element.temperature);
+      humidityArray.push(element.humidity);
+      timestampArray.push(element.timestamp.toString());
+    });
+
+    this.chartData = [
+      { data: temperatureArray, label: 'Temperature' },
+      { data: humidityArray, label: 'Humidity' }
+    ];
+
+    this.chartLabels = timestampArray;
   }
 }
