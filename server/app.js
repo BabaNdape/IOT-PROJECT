@@ -194,12 +194,11 @@ app.post('/start-machine', async (req,res) => {
 });
   
 // HTTP SERVER
-app.listen(port, () => {
-  console.log(`HTTP server for dashboard and Raspy at http://localhost:${port}`)
+app.listen(port, '0.0.0.0', () => {
+  console.log(`HTTP server running on port : ${port}`)
 })
 
 // COAP 
-
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
 fitiotServer.on('request', function(req, res) {
@@ -217,7 +216,7 @@ fitiotServer.on('request', function(req, res) {
   fitiotData.save()
       .then(data => {
           res.end(JSON.stringify(payload))
-          console.log("Voici les données qui ont été postées :", payload)
+          console.log("Voici les données qui ont été postées :", payload);
       })
       .catch(err => {
           console.log(err);
@@ -226,5 +225,5 @@ fitiotServer.on('request', function(req, res) {
 })
 
 fitiotServer.listen(function() {
-  console.log('COAP server for fitiot at coap://localhost:5863')
+  console.log('COAP server running on port : 5863');
 })
