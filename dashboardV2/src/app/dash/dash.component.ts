@@ -43,7 +43,7 @@ export class DashComponent {
     let responses = await this.httpClientServiceService.askDataToServer(minutesAsked);
     this.responseFitiot = responses[0];
     this.responseRaspy = responses[1];
-    console.log(this.responseFitiot[0].timestamp);
+    console.log(responses)
     console.log('on dash component');
     this.eventEmitterService.onUpdateFitiotData(this.responseFitiot);
     this.eventEmitterService.onUpdateRaspyInData(this.responseRaspy);
