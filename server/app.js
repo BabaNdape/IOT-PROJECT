@@ -49,7 +49,7 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
       console.log("timestamp enddd", timestampEnd);
 
       const query = raspyDataModel.find();
-      //query.where('timestamp').gte(timestampStart);
+      query.where('timestamp').gte(timestampStart);
       query.where('timestamp').lte(timestampEnd);
       let fitiotDataReturned = [];
       //raspyDataReturned = [];
@@ -111,7 +111,7 @@ app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
     console.log("timestamp end", timestampEnd);
 
     const query = raspyDataModel.find();
-    //query.where('timestamp').gte(timestampStart);
+    query.where('timestamp').gte(timestampStart);
     query.where('timestamp').lte(timestampEnd);
     let raspyDataReturned = {};
     raspyDataReturned = [];

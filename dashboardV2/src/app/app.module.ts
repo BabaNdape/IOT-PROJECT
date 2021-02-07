@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CardComponent } from './card/card.component';
 import { FitiotDataComponent } from './charts/fitiot-data/fitiot-data.component';
+import { EventEmitterService } from './event-emitter.service';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,7 @@ import { FitiotDataComponent } from './charts/fitiot-data/fitiot-data.component'
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [EventEmitterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
