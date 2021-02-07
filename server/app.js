@@ -49,7 +49,7 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
       console.log("timestamp enddd", timestampEnd);
 
       const query = raspyDataModel.find();
-      query.where('timestamp').gte(timestampStart);
+      //query.where('timestamp').gte(timestampStart);
       query.where('timestamp').lte(timestampEnd);
       let fitiotDataReturned = [];
       //raspyDataReturned = [];
@@ -61,7 +61,7 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
 
         for (var i = 0, l = fitData.length; i < l; i++) {
           curFitData = {
-            timestamp:  (fitData[i].timestamp - timestampEnd),
+            timestamp:  (fitData[i].timestamp - timestampEnd) / 60,
             temperature: fitData[i].temperature,
             humidity: fitData[i].humidity,
             alarm: fitData[i].alarm
@@ -111,7 +111,7 @@ app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
     console.log("timestamp end", timestampEnd);
 
     const query = raspyDataModel.find();
-    query.where('timestamp').gte(timestampStart);
+    //query.where('timestamp').gte(timestampStart);
     query.where('timestamp').lte(timestampEnd);
     let raspyDataReturned = {};
     raspyDataReturned = [];
@@ -122,7 +122,7 @@ app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
       var curRaspyData;
       for (var i = 0, l = raspDataResult.length; i < l; i++) {
         curRaspyData = {
-          timestamp: (fitData[i].timestamp - timestampEnd),
+          timestamp: (raspDataResult[i].timestamp - timestampEnd) / 60,
           temperatureIn: raspDataResult[i].temperatureIn,
           temperatureOut: raspDataResult[i].temperatureOut,
           pressureIn: raspDataResult[i].pressureIn,

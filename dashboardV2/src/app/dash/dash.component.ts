@@ -11,6 +11,8 @@ import { HttpClientServiceService } from '../http-client-service.service';
 export class DashComponent {
   // Variable
   @Input() timestamp: number = Date.now();
+  responseFitiot: any[] = [];
+  responseRaspy: any[] = [];
   /** Based on the screen size, switch from standard to one column per row */
   cards = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
     map(({ matches }) => {
@@ -34,9 +36,11 @@ export class DashComponent {
 
   constructor(private breakpointObserver: BreakpointObserver, private httpClientServiceService : HttpClientServiceService) {}
 
-  askData(minutesAsked: number) {
+  async askData(minutesAsked: number) {
     this.timestamp = minutesAsked
     console.log(this.timestamp);
-    this.httpClientServiceService.askDataToServer(minutesAsked);
+    let responses = await this.httpClientServiceService.askDataToServer(minutesAsked);
+    this.responseFitiot = responses[0];
+    this.responseRaspy = responses[1];
   }
 }

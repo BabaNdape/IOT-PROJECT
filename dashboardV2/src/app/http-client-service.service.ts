@@ -7,7 +7,6 @@ import { stringify } from '@angular/compiler/src/util';
 })
 export class HttpClientServiceService {
   constructor(private httpClient: HttpClient) { }
-
   optionRequest = {
     headers: new HttpHeaders({ 
       'Access-Control-Allow-Origin':'*',
@@ -16,18 +15,19 @@ export class HttpClientServiceService {
     })
   };
 
-  public baseurl = 'http://localhost:3000/sensors-data-fitiot/'
+  public baseurlFitiot = 'http://localhost:3000/sensors-data-fitiot/';
+  public baseurlRaspy = 'http://localhost:3000/sensors-data-raspy/';
 
   async askDataToServer(minutesAsked: number) {
-    this.httpClient
-    .get<any[]>(this.baseurl + minutesAsked.toString())
-    .subscribe(
-      (response) => {
-        console.log(response);
-      },
-      (error) => {
-        console.log(error);
-      }
-    );
+    const fitiotResponse = await this.httpClient
+    .get<any[]>(this.baseurlFitiot + minutesAsked.toString())
+    .toPromise();
+    //console.log(fitiotResponse);
+
+    const raspyResponse = await this.httpClient
+      .get<any[]>(this.baseurlRaspy + minutesAsked.toString())
+      .toPromise();
+    //console.log(raspyResponse);
+    return [fitiotResponse, raspyResponse]
   }
 }
