@@ -73,27 +73,6 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
   }
 });
 
-// Receive data from fitiot
-app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
-  console.log(req.body.timestamp);
-  const fitiotData = new fitiotDataModel({
-      "timestamp": req.body.timestamp,
-      "temperature": req.body.temperature,
-      "humidity": req.body.humidity,
-      "alarm": req.body.alarm
-  });
-  fitiotData.save()
-      .then(data => {
-          res.json(data);
-          console.log("Voici les données qui ont été postées :", fitiotData)
-      })
-      .catch(err => {
-          console.log(err);
-          res.json({ message: err });
-      });
-  });
-
-
 // TODO: Corriger le filtrage que Paul a cassé :(
 // CONNECTION WITH RASPY
 // Send raspy data between two time stamp
@@ -197,6 +176,7 @@ app.listen(port, '0.0.0.0', () => {
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
 fitiotServer.on('request', function(req, res) {
+  console.log(req.payload)
   const payload = eval('(' + req.payload.toString() + ')')
   console.log(payload)
 
