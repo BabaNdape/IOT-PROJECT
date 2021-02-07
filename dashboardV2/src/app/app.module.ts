@@ -14,11 +14,15 @@ import { LayoutModule } from '@angular/cdk/layout';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { CardComponent } from './card/card.component';
+import { FitiotDataComponent } from './charts/fitiot-data/fitiot-data.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    DashComponent
+    DashComponent,
+    CardComponent,
+    FitiotDataComponent
   ],
   imports: [
     BrowserModule,
