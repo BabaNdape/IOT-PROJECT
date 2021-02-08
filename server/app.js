@@ -13,9 +13,6 @@ const port = 3000
 const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
-// raspy and fit server
-const addressRaspy = "http://localhost:3005";
-const addressFitiot = "coap://[::1]";
 
 // CONNECT DASHBOARD
 app.use(express.static('../dashboard'))
@@ -116,6 +113,7 @@ app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
 
 // Receive data from raspy
 app.post('/sensors-data-raspy', jsonParser, async (req,res) => {
+  console.log("save on raspy model");
   console.log(req.body);
   const raspyData = new raspyDataModel({
       "timestamp": req.body.timestamp,
@@ -167,16 +165,15 @@ app.post('/start-machine', async (req,res) => {
   })*/
 });
   
-// HTTP SERVER
-app.listen(port, '0.0.0.0', () => {
-  console.log(`HTTP server running on port : ${port}`)
-})
+// HTTP SERVER  console.log("save on fit model");
+
 
 // COAP 
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
-fitiotServer.on('request', function(req, res) {
-  console.log(req.payload)
+  console.log("save on fit model");
+  fitiotServer.on('request', function(req, res) {
+  console.log(req.payload.toString())
   const payload = eval('(' + req.payload.toString() + ')')
   console.log(payload)
 
@@ -187,6 +184,7 @@ fitiotServer.on('request', function(req, res) {
     "alarm": payload.alarm
   });
 
+  console.log("save on fit model");
 
   fitiotData.save()
       .then(data => {
