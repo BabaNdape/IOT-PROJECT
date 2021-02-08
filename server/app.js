@@ -225,5 +225,5 @@ fitiotServer.on('request', function(req, res) {
 })
 
 fitiotServer.listen(function() {
-  console.log('COAP server running on port : 5863');
+  console.log('COAP server running on port : 5683');
 })
