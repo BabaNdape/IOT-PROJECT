@@ -43,7 +43,7 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
       console.log("timestamp start", timestampStart);
       console.log("timestamp enddd", timestampEnd);
 
-      const query = raspyDataModel.find();
+      const query = fitiotDataModel.find();
       query.where('timestamp').gte(timestampStart);
       query.where('timestamp').lte(timestampEnd);
       let fitiotDataReturned = [];
@@ -171,8 +171,8 @@ app.post('/start-machine', async (req,res) => {
 // COAP 
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
+fitiotServer.on('request', function(req, res) {
   console.log("save on fit model");
-  fitiotServer.on('request', function(req, res) {
   console.log(req.payload.toString())
   const payload = eval('(' + req.payload.toString() + ')')
   console.log(payload)
