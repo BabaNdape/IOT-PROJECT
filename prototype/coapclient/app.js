@@ -1,5 +1,7 @@
 const coap  = require('coap')
-    , req   = coap.request('coap://[::1]/')
+    , req   = coap.request('coap://[2001:660:330f:f::c8]/')
+
+console.log('bonjour')
 var payload = {
   "timestamp": 3,
   "temperature": 2,

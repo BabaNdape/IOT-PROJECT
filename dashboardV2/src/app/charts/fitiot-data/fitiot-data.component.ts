@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { Color, Label } from 'ng2-charts';
+import { EventEmitterService } from '../../event-emitter.service'; 
 
 @Component({
   selector: 'app-fitiot-data',
@@ -12,14 +13,39 @@ export class FitiotDataComponent implements OnInit {
     responsive: true
   };
   chartData = [
-    { data: [330, 600, 260, 700], label: 'Account A' },
-    { data: [120, 455, 100, 340], label: 'Account B' },
-    { data: [45, 67, 800, 500], label: 'Account C' }
+    { data: [0], label: 'Temperature' },
+    { data: [0], label: 'Humidity' }
   ];
-  chartLabels = ['January', 'February', 'Mars', 'April'];
+  chartLabels = ['0'];
+  constructor(private eventEmitterService: EventEmitterService  ) { }
 
-  constructor() { }
+  ngOnInit() { 
+      this.eventEmitterService.subsVar = this.eventEmitterService.    
+      invokeUpdateFitiotData.subscribe((fitiotData:any[]) => {
+        console.log('allo')    
+        this.updateData(fitiotData);    
+      });  
+  }
 
-  ngOnInit() {
+  updateData(fitiotData: any[]){
+    console.log('on graph');
+    console.log(fitiotData)
+
+    let temperatureArray: number[] = [];
+    let humidityArray: number[] = [];
+    let timestampArray: string[] = [];
+
+    fitiotData.forEach(element => {
+      temperatureArray.push(element.temperature);
+      humidityArray.push(element.humidity);
+      timestampArray.push(element.timestamp.toString());
+    });
+
+    this.chartData = [
+      { data: temperatureArray, label: 'Temperature' },
+      { data: humidityArray, label: 'Humidity' }
+    ];
+
+    this.chartLabels = timestampArray;
   }
 }

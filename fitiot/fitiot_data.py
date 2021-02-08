@@ -5,11 +5,13 @@ import json
 import time
 import threading
 
-from aiocoap import *
+from datetime import datetime
+
+#from aiocoap import *
 
 #command to create an experiment named rio_project of duration 5mins
-experiment = "iotlab-experiment submit -n rio_project -d 5 -l 2,archi=m3:at86rf231+site=grenoble" 
-result = subprocess.check_output(experiment, shell=True) 
+experiment = "iotlab-experiment submit -n rio_project -d 5 -l 2,archi=m3:at86rf231+site=grenoble"
+result = subprocess.check_output(experiment, shell=True)
 #print(result)
 id = json.loads(result)
 exp_id = id['id'] #id of experiment...useful when multiple experiments are running
@@ -81,9 +83,9 @@ coap_server_prefix = "coap://[2001:660:5307:3140::"
 port = "5683/"
 
 ##pressure can be used to calculate temperature
-temperature = "sensors/pressure"
+temperature_data = "sensors/pressure"
 
-coap_server = command + coap_server_prefix + server_ip + "]:" + port + temperature
+coap_server = command + coap_server_prefix + server_ip + "]:" + port + temperature_data
 result = subprocess.check_output(coap_server, shell=True)
 alive = False #kills daemon
 
@@ -95,18 +97,23 @@ print("pressure = " + str(pressure)) #stored in a variable...to be sent to datab
 
 #command to post data
 command = "aiocoap-client "
-coap_http_server_prefix = "coap://[::1]:" #TO-DO modifier pour l'ip du serveur 
+coap_http_server_prefix = "coap://[2001:660:330f:f::c8]:" #TO-DO modifier pour l'ip du serveur
 port = "5683/"
 path = "sensors-data-fitiot"
 
 #To-do mettre les bonnes valeurs dans le payload
-payload = "{'timestamp':3,'temperature':2,'humidity':1,'alarm':false}"
+
+now = datetime.now()
+timestamp = time.time()
+
+temperature = pressure/2
+
+payload = "{'timestamp':timestamp,'temperature':temperature,'humidity':pressure,'alarm':false}"
 
 #payload = json.dumps({"timestamp":3,"temperature":2,"humidity":1,"alarm":"False"})
 
+print(payload)
 
 coap_http_server = command + coap_http_server_prefix+ port + path + " --payload " + payload
 
 result = subprocess.check_output(coap_http_server, shell=True)
-alive = False #kills daemon
-print(result)

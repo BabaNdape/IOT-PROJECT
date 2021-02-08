@@ -16,13 +16,18 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { CardComponent } from './card/card.component';
 import { FitiotDataComponent } from './charts/fitiot-data/fitiot-data.component';
+import { EventEmitterService } from './event-emitter.service';
+import { RaspiInDataComponent } from './charts/raspi-in-data/raspi-in-data.component';
+import { RaspiOutDataComponent } from './charts/raspi-out-data/raspi-out-data.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DashComponent,
     CardComponent,
-    FitiotDataComponent
+    FitiotDataComponent,
+    RaspiInDataComponent,
+    RaspiOutDataComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +43,7 @@ import { FitiotDataComponent } from './charts/fitiot-data/fitiot-data.component'
     FormsModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [EventEmitterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

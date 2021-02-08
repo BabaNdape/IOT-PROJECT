@@ -13,9 +13,6 @@ const port = 3000
 const bodyParser = require('body-parser')
 var jsonParser = bodyParser.json()
 
-// raspy and fit server
-const addressRaspy = "http://localhost:3005";
-const addressFitiot = "coap://[::1]";
 
 // CONNECT DASHBOARD
 app.use(express.static('../dashboard'))
@@ -39,17 +36,15 @@ mongoose.connect(process.env.DB_URL, {
 
 // TODO: Corriger le filtrage que Paul a cassé :( Vilain Paul :(
 app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
-  console.log(req.params.timeback);
   try {
       // Calculating defaults params for timestamps
-      console.log(req.params.timeback * 60)
       let timestampEnd = Date.now() / 1000;
       let timestampStart = (timestampEnd - req.params.timeback * 60);
       console.log("timestamp start", timestampStart);
       console.log("timestamp enddd", timestampEnd);
 
       const query = raspyDataModel.find();
-      //query.where('timestamp').gte(timestampStart);
+      query.where('timestamp').gte(timestampStart);
       query.where('timestamp').lte(timestampEnd);
       let fitiotDataReturned = [];
       //raspyDataReturned = [];
@@ -66,10 +61,8 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
             humidity: fitData[i].humidity,
             alarm: fitData[i].alarm
           };
-          console.log(fitData[i])
           fitiotDataReturned.push(curFitData);
         }
-        console.log(fitiotDataReturned);
         res.json(fitiotDataReturned);
       });
   } catch(err) {
@@ -77,32 +70,10 @@ app.get('/sensors-data-fitiot/:timeback?/', jsonParser, async (req, res) => {
   }
 });
 
-// Receive data from fitiot
-app.post('/sensors-data-fitiot', jsonParser, async (req,res) => {
-  console.log(req.body.timestamp);
-  const fitiotData = new fitiotDataModel({
-      "timestamp": req.body.timestamp,
-      "temperature": req.body.temperature,
-      "humidity": req.body.humidity,
-      "alarm": req.body.alarm
-  });
-  fitiotData.save()
-      .then(data => {
-          res.json(data);
-          console.log("Voici les données qui ont été postées :", fitiotData)
-      })
-      .catch(err => {
-          console.log(err);
-          res.json({ message: err });
-      });
-  });
-
-
 // TODO: Corriger le filtrage que Paul a cassé :(
 // CONNECTION WITH RASPY
 // Send raspy data between two time stamp
 app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
-  console.log(req.params.timeback);
   try {
     // Calculating defaults params for timestamps
     let timestampEnd = Date.now();
@@ -111,7 +82,7 @@ app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
     console.log("timestamp end", timestampEnd);
 
     const query = raspyDataModel.find();
-    //query.where('timestamp').gte(timestampStart);
+    query.where('timestamp').gte(timestampStart);
     query.where('timestamp').lte(timestampEnd);
     let raspyDataReturned = {};
     raspyDataReturned = [];
@@ -142,6 +113,7 @@ app.get('/sensors-data-raspy/:timeback?', jsonParser, async (req, res) => {
 
 // Receive data from raspy
 app.post('/sensors-data-raspy', jsonParser, async (req,res) => {
+  console.log("save on raspy model");
   console.log(req.body);
   const raspyData = new raspyDataModel({
       "timestamp": req.body.timestamp,
@@ -193,25 +165,26 @@ app.post('/start-machine', async (req,res) => {
   })*/
 });
   
-// HTTP SERVER
-app.listen(port, '0.0.0.0', () => {
-  console.log(`HTTP server running on port : ${port}`)
-})
+// HTTP SERVER  console.log("save on fit model");
+
 
 // COAP 
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
-fitiotServer.on('request', function(req, res) {
+  console.log("save on fit model");
+  fitiotServer.on('request', function(req, res) {
+  console.log(req.payload.toString())
   const payload = eval('(' + req.payload.toString() + ')')
   console.log(payload)
 
   const fitiotData = new fitiotDataModel({
-    "timestamp": payload.imestamp,
+    "timestamp": payload.timestamp,
     "temperature": payload.temperature,
     "humidity": payload.humidity,
     "alarm": payload.alarm
   });
 
+  console.log("save on fit model");
 
   fitiotData.save()
       .then(data => {

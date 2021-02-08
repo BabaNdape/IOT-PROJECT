@@ -1,7 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Breakpoints, BreakpointObserver } from '@angular/cdk/layout';
 import { HttpClientServiceService } from '../http-client-service.service';
+import { EventEmitterService } from '../event-emitter.service';  
 
 @Component({
   selector: 'app-dash',
@@ -34,7 +35,7 @@ export class DashComponent {
     })
   );
 
-  constructor(private breakpointObserver: BreakpointObserver, private httpClientServiceService : HttpClientServiceService) {}
+  constructor(private breakpointObserver: BreakpointObserver, private httpClientServiceService : HttpClientServiceService, private eventEmitterService: EventEmitterService) {}
 
   async askData(minutesAsked: number) {
     this.timestamp = minutesAsked
@@ -42,5 +43,10 @@ export class DashComponent {
     let responses = await this.httpClientServiceService.askDataToServer(minutesAsked);
     this.responseFitiot = responses[0];
     this.responseRaspy = responses[1];
+    console.log(responses)
+    console.log('on dash component');
+    this.eventEmitterService.onUpdateFitiotData(this.responseFitiot);
+    this.eventEmitterService.onUpdateRaspyInData(this.responseRaspy);
+    this.eventEmitterService.onUpdateRaspyOutData(this.responseRaspy);
   }
 }
