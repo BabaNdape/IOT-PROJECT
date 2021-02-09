@@ -37,6 +37,11 @@ export class DashComponent {
 
   constructor(private breakpointObserver: BreakpointObserver, private httpClientServiceService : HttpClientServiceService, private eventEmitterService: EventEmitterService) {}
 
+  ngOnInit() { 
+    this.askData(120);
+  }
+
+
   async askData(minutesAsked: number) {
     this.timestamp = minutesAsked
     console.log(this.timestamp);
