@@ -179,33 +179,52 @@ app.listen(port, '0.0.0.0', () => {
 
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
+// fitiotServer.on('request', function(req, res) {
+//   console.log("save on fit model");
+//   console.log(req.payload.toString())
+//   const payload = eval('(' + req.payload.toString() + ')')
+//   console.log(payload)
+
+//   const fitiotData = new fitiotDataModel({
+//     "timestamp": payload.timestamp,
+//     "temperature": payload.temperature,
+//     "humidity": payload.humidity,
+//     "alarm": payload.alarm
+//   });
+
+//   console.log("save on fit model");
+
+//   fitiotData.save()
+//       .then(data => {
+//           res.end(JSON.stringify(payload))
+//           console.log("Voici les données qui ont été postées :", payload);
+//       })
+//       .catch(err => {
+//           console.log(err);
+//           res.end({ message: err });
+//       });
+// })
+
+
+// fitiotServer.listen(5683, () => {
+//   console.log('COAP server running on port : 5683');
+// })
+
+
 fitiotServer.on('request', function(req, res) {
-  console.log("save on fit model");
-  console.log(req.payload.toString())
-  const payload = eval('(' + req.payload.toString() + ')')
-  console.log(payload)
-
-  const fitiotData = new fitiotDataModel({
-    "timestamp": payload.timestamp,
-    "temperature": payload.temperature,
-    "humidity": payload.humidity,
-    "alarm": payload.alarm
-  });
-
-  console.log("save on fit model");
-
-  fitiotData.save()
-      .then(data => {
-          res.end(JSON.stringify(payload))
-          console.log("Voici les données qui ont été postées :", payload);
-      })
-      .catch(err => {
-          console.log(err);
-          res.end({ message: err });
-      });
+  res.end('Hello ' + req.url.split('/')[1] + '\n')
 })
 
+// the default CoAP port is 5683
+fitiotServer.listen(function() {
+  var req = coap.request('coap://[::1]/Matteo')
 
-fitiotServer.listen(5683, () => {
-  console.log('COAP server running on port : 5683');
+  req.on('response', function(res) {
+    res.pipe(process.stdout)
+    res.on('end', function() {
+      process.exit(0)
+    })
+  })
+
+  req.end()
 })
