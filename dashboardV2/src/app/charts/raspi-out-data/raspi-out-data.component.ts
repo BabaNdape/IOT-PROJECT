@@ -41,7 +41,7 @@ export class RaspiOutDataComponent implements OnInit {
       temperatureOutArray.push(element.temperatureOut);
       humidityOutArray.push(element.humidityOut);
       pressureOutArray.push(element.pressureOut);
-      timestampArray.push(element.timestamp.toString());
+      timestampArray.push(Math.trunc(element.timestamp).toString());
     });
 
     this.chartData = [

@@ -38,7 +38,7 @@ export class FitiotDataComponent implements OnInit {
     fitiotData.forEach(element => {
       temperatureArray.push(element.temperature);
       humidityArray.push(element.humidity);
-      timestampArray.push(element.timestamp.toString());
+      timestampArray.push(Math.trunc(element.timestamp).toString());
     });
 
     this.chartData = [
