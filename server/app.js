@@ -172,15 +172,15 @@ app.post('/start-machine', async (req,res) => {
   
 // HTTP SERVER
 app.listen(port, '0.0.0.0', () => {
-  console.log("HTTP server running on port : ${port}")
+  console.log(`HTTP server running on port : ${port}`)
 })
 
 // COAP 
 
 const fitiotServer  = coap.createServer({ type: 'udp6' })
 
-console.log("save on fit model");
 fitiotServer.on('request', function(req, res) {
+  console.log("save on fit model");
   console.log(req.payload.toString())
   const payload = eval('(' + req.payload.toString() + ')')
   console.log(payload)
